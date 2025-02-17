@@ -1,8 +1,8 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+require("dotenv").config(); // Load environment variables from .env file
 
 const houseRoutes = require("./routes/HouseRoute");
 const Requests = require("./routes/RequestsRoute");
@@ -13,12 +13,9 @@ const note = require("./routes/NotificationRoute");
 const app = express();
 
 app.use(express.json());
-// Middleware
 app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:52966", credentials: true }));
 
-app.use(express.json()); // Middleware for JSON data
-
-app.use(cors({ origin: "http://localhost:52966", credentials: true })); 
 mongoose
   .connect("mongodb://0.0.0.0:27017/Haylegnaw")
   .then(() => {
@@ -34,9 +31,9 @@ app.use("/user", userRoutes);
 app.use("/note", note);
 app.use("/feed", feedback);
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
+// Use PORT from .env or default to 3000
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
-
-
-
